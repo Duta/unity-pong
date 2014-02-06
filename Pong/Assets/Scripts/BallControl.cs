@@ -27,20 +27,20 @@ public class BallControl : MonoBehaviour {
 	}
 	
 	void OnCollisionEnter2D(Collision2D collision) {
-		switch(collision.collider.tag) {
-		case "Player":
-			rigidbody2D.velocity = new Vector2(
-				rigidbody2D.velocity.x,
-				rigidbody2D.velocity.y/2 + collision.collider.rigidbody2D.velocity.y/3);
-			break;
+		if(collision.collider.tag == "Player") {
+			float paddleSpeed = collision.collider.rigidbody2D.velocity.y;
+			float x = rigidbody2D.velocity.x;
+			float y = rigidbody2D.velocity.y;
+			float newY = y/2 + paddleSpeed/3;
+			float newX = Mathf.Sqrt(x*x + y*y - newY*newY);
+			if(x < 0) newX = -newX;
+			rigidbody2D.velocity = new Vector2(newX, newY);
 		}
 	}
 	
 	void OnTriggerEnter2D(Collider2D collider) {
-		switch(collider.tag) {
-		case "SideWall":
+		if(collider.tag == "SideWall") {
 			Reset();
-			break;
 		}
 	}
 }
